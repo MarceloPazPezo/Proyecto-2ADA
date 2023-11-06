@@ -1,0 +1,14 @@
+*.aux
+*.log
+*.nlo
+*.out
+*.cls
+*.tex
+*.bcf
+*.toc
+*.run.xml
+Report/main.pdf
+Report/img
+Report/section
+Report/sources.bib
+Report/main.pdf
