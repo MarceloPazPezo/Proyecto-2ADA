@@ -1,0 +1,15 @@
+Cada colaborador podra modificar solo su carpeta.
+
+Para ello cuando esten trabajando con git deberan usar:
+
+// Agregar archivos a capturar con el commit
+git add .\AreaDeTrabajo\tuCarpeta\
+
+// Para hacer una captura una instantánea de los cambios preparados en ese momento del proyecto.
+git commit -m "mensaje de 50 caracteres"
+
+// Para enviar tus datos locales al remoto
+git push -u origin main
+
+// para Actualizar la carpeta local con datos remotos
+git pull
