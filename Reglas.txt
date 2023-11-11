@@ -8,8 +8,14 @@ git add .\AreaDeTrabajo\tuCarpeta\
 // Para hacer una captura una instantánea de los cambios preparados en ese momento del proyecto.
 git commit -m "mensaje de 50 caracteres"
 
+//Para crear una nueva rama y no sobreescribir archivos del main
+git branch <nombre-cualquiera ej.: branch-peruano>
+
+//Para utilizar tu rama creada 
+git checkout <nombre-branch>
+
 // Para enviar tus datos locales al remoto
-git push -u origin main
+git push -u origin <nombre-branch>
 
 // para Actualizar la carpeta local con datos remotos
 git pull
