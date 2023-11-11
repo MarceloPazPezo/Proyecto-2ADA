@@ -14,7 +14,11 @@ git branch <nombre-cualquiera ej.: branch-peruano>
 //Para utilizar tu rama creada 
 git checkout <nombre-branch>
 
-// Para enviar tus datos locales al remoto
+
+//Para crear tu rama en el repo
+git push --set-upstream origin <nombre_branch>
+
+// Para enviar tus datos locales al remoto despues de ya creada la branch
 git push -u origin <nombre-branch>
 
 // para Actualizar la carpeta local con datos remotos
