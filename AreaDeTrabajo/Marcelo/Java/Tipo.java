@@ -3,9 +3,12 @@ package Java;
 public class Tipo {
     public char tipo;
     public int largo;
+    public int marcax, marcay;
 
-    public Tipo(char tipo) {
+    public Tipo(char tipo, int x, int y) {
         this.tipo = tipo;
+        this.marcax = x;
+        this.marcay = y;
         if (tipo == 'A') {
             this.largo = 5;
         } else if (tipo == 'B') {

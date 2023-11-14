@@ -3,6 +3,37 @@ public class Tablero{
   static java.util.Random generator = new java.util.Random();
   private char [][] t;
   private int intentos = 0;
+  // public Tablero(int n){
+  //   if(n<10) n=10;
+  //   t = new char[n+2][n+2];
+  //   for(int i=1;i<n+1;i++)
+  //     for(int j=1;j<n+1;j++)
+  //     	t[i][j]= '0';
+    
+  //   t[10][1] = 'A';
+  //   t[10][2] = 'A';
+  //   t[10][3] = 'A';
+  //   t[10][4] = 'A';
+  //   t[10][5] = 'A';
+
+  //   t[5][1] = 'B';
+  //   t[6][1] = 'B';
+  //   t[7][1] = 'B';
+  //   t[8][1] = 'B';
+
+  //   t[3][3] = 'C';
+  //   t[3][4] = 'C';
+  //   t[3][5] = 'C';
+
+  //   t[5][3] = 'S';
+  //   t[6][3] = 'S';
+  //   t[7][3] = 'S';
+
+  //   t[8][3] = 'D';
+  //   t[8][4] = 'D';
+
+	// intentos = 0;
+  // }
   public Tablero(int n){
     if(n<10) n=10;
     t = new char[n+2][n+2];
@@ -60,10 +91,10 @@ public class Tablero{
     for(int i=1;i<t[0].length-1;i++)
       for(int j=1;j<t.length-1;j++)
         if(t[i][j]!='0' && t[i][j]!='X') return 0;
-    Imprimir();
+    // Imprimir();
     return intentos;
   }
-  public void Imprimir(){ // Privado
+  private void Imprimir(){ // Privado
     for(int i=1;i<t[0].length-1;i++){
       for(int j=1;j<t.length-1;j++)
       	System.out.print(t[i][j] + " ");
