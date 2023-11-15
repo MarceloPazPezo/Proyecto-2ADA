@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 // import java.util.Iterator;
 import java.util.Random;
 // import java.util.Scanner;
@@ -12,14 +15,14 @@ public class Main {
   public static ArrayList<String> ListaDisparos = new ArrayList<>();
   public static Integer intentos;
   public static ArrayList<Integer> ListaDeIntentos = new ArrayList<>();
+  public static Integer valorMin, valorMax;
+  public static HashMap<Integer, Integer> mapa = new HashMap<>();
 
   public static void main(String[] args) {
       // Tamaño del tablero
-      for (int i = 0; i < 1000000; i++) {
+      for (int i = 0; i < 10000; i++) {
         System.out.println("Juego " + (i+1));
         Tablero tablero = new Tablero(10);
-        // tablero.Imprimir();
-        // ListaDisparos.add("y:x");
         Juego(tablero);
         ListaDeIntentos.add(intentos);
       }
@@ -29,8 +32,35 @@ public class Main {
       for (Integer i : ListaDeIntentos) {
         suma += i;
       }
-
       System.out.println("Promedio de intentos: " + suma/ListaDeIntentos.size());
+      
+      if (1 == 0) // Mostrar cosas innecesarias
+      {
+        // Recorrer la lista
+        for (int valor : ListaDeIntentos) {
+            // Si el mapa ya contiene el valor, incrementar su conteo
+            if (mapa.containsKey(valor)) {
+                mapa.put(valor, mapa.get(valor) + 1);
+            } else {
+                // Si el mapa no contiene el valor, agregarlo con un conteo de 1
+                mapa.put(valor, 1);
+            }
+        }
+        // Convertir el mapa en una lista de entradas
+        List<Map.Entry<Integer, Integer>> lista = new ArrayList<>(mapa.entrySet());
+
+        // Ordenar la lista de menor a mayor
+        lista.sort(Map.Entry.comparingByKey());
+
+        // Imprimir la lista ordenada
+        for (Map.Entry<Integer, Integer> entrada : lista) {
+            System.out.println("El valor " + entrada.getKey() + " aparece " + entrada.getValue() + " veces.");
+        }
+        
+        System.out.println("Intentos minimos: " + valorMin);
+        System.out.println("Intentos maximos: " + valorMax);
+      }
+
       
   }
 
@@ -43,14 +73,11 @@ public class Main {
         oceanoDisparos[i][j] = '0';
       }
     }
-    // float[][] oceanoProbabilidad = new float[10][10];
 
-    // ListaDisparos.add("y:x");
     for (int i = 1; i<=100; i++) {
       // Generar numero random
       boolean par = false;
       intentos = t.ganar();
-      // System.out.println("Disparo #" + ListaDisparos.size());
       if (intentos == 0)
       {
         int x, y;
@@ -58,12 +85,19 @@ public class Main {
           Random r = new Random();
           x = r.nextInt(10) + 1;
           y = r.nextInt(10) + 1;
-          if (x%2 == 0 && y%2 == 1)
+          if (((x+y)%2 == 0) && oceanoDisparos[x-1][y-1] == '0')
             par = true;
-          if (y%2 == 0 && x%2 == 1)
-            par = true;
-          
-        } while (oceanoDisparos[x-1][y-1] != '0' || par == false);
+        } while (par == false);
+        if (i == 0)
+        {
+          x = 6;
+          y = 6;
+        }
+        if (i == 1)
+        {
+          x = 7;
+          y = 7;
+        }
         char d = t.disparo(x, y);
         ListaDisparos.add(y + ":" + x);
         if (d == '0')
@@ -76,32 +110,20 @@ public class Main {
           Tipo objetivo = new Tipo(d, x, y);
           objetivo.largo--;
           pilaObjetivo.add(objetivo);
-          // Iterator<Tipo> it = pilaObjetivo.iterator();
-          // while (it.hasNext()) {
-          //   modoCaza(oceanoDisparos, t, it.next());
-          // }
-          // for (Tipo o : pilaObjetivo) {
+
           for(int j=0; j<pilaObjetivo.size(); j++) {
             modoCaza(oceanoDisparos, t, pilaObjetivo.get(j));
-            // j++;
-            // System.out.println(">>> Modo caza activado: " + d);
-
-
-            // System.out.println("--------------------");
-            // for (char[] oD : oceanoDisparos) {
-            //   for (char oD2 : oD) {
-            //     System.out.print(oD2 + " ");
-            //   }
-            //   System.out.println();
-            // }
           }
           pilaObjetivo.clear();
         }        
       }
       else
       {
-        System.out.println("Ganaste en " + intentos + " intentos");
-        // System.exit(0);
+        if (valorMin == null || valorMin > intentos)
+          valorMin = intentos;
+        if (valorMax == null || valorMax < intentos)
+          valorMax = intentos;
+        // System.out.println("Ganaste en " + intentos + " intentos");
         break;
       }
     }
@@ -120,7 +142,7 @@ public class Main {
         up++;
         if (down>0)
           down = 0;
-        do
+        do {
           if (((x-up+down) < 1 || (x-up+down) > 10) || (y-left+right) < 1 || (y-left+right) > 10)
           {
             repetir = false;
@@ -159,10 +181,9 @@ public class Main {
           }
           else
           {
-            // System.out.println("Punto repetido " + (y-left+right) + ":" + (x-up+down));
             repetir = false;
           }
-        while (repetir);
+        } while (repetir);
         up--;
       }
 
@@ -171,7 +192,7 @@ public class Main {
         right++;
         if (left>0)
           left = 0;
-        do
+        do {
           if (((x-up+down) < 1 || (x-up+down) > 10) || (y-left+right) < 1 || (y-left+right) > 10)
           {
             repetir = false;
@@ -209,7 +230,7 @@ public class Main {
           }
           else
             repetir = false;
-        while (repetir);
+        } while (repetir);
         right--;
       }
 
@@ -219,7 +240,7 @@ public class Main {
         down++;
         if (up > 0)
           up = 0;
-        do
+        do {
           if (((x-up+down) < 1 || (x-up+down) > 10) || (y-left+right) < 1 || (y-left+right) > 10)
           {
             repetir = false;
@@ -257,7 +278,7 @@ public class Main {
           }
           else
             repetir = false;
-        while (repetir);
+        } while (repetir);
         down--;
       }
       // Disparar Izquierda
@@ -266,7 +287,7 @@ public class Main {
         left++;
         if (right > 0)
           right = 0;
-        do
+        do {
           if (((x-up+down) < 1 || (x-up+down) > 10) || (y-left+right) < 1 || (y-left+right) > 10)
           {
             repetir = false;
@@ -304,226 +325,10 @@ public class Main {
           }
           else
             repetir = false;
-        while (repetir);
+        } while (repetir);
         left--;
       }
 
     }
   }
 }
-//   public static void modoCaza1(char[][] oceanoDisparos, int x, int y, Tablero t, Tipo objetivo) {
-//     int i = 1;
-//     while (true) {
-//       // if (objetivo.largo <= 0) return;
-//       if (objetivo.largo <= 0) return;
-
-//       // Dispara arriba
-//       if (oceanoDisparos[x-i-1][y-1] == '0') // Comprobar si el disparo es posible
-//       {
-//         char d = t.disparo(x-i, y); // Dispara
-//         if (d == '0') // Si falla
-//         {
-//           oceanoDisparos[x-i-1][y-1] = 'X';
-//         }
-//         else // Si acierta
-//         {
-//           oceanoDisparos[x-i-1][y-1] = d;
-//           if (d == objetivo.tipo)// Si es el objetivo
-//           {
-//             objetivo.largo--;
-//             i++;
-//             if (objetivo.largo <= 0) return; // Si ya esta cazado
-            
-//             if (oceanoDisparos[x-i-1][y-1] == '0') // Comprobar si el disparo es posible
-//             {
-//               d = t.disparo(x-i, y);
-//               if (d == '0') // Si falla
-//               {
-//                 oceanoDisparos[x-i-1][y-1] = 'X';
-//                 i--;
-                
-//                 if (oceanoDisparos[x-i-1][y-1] == '0') // Comprobar si el disparo es posible
-//                 {
-//                   d = t.disparo(x-i, y);
-
-//                   if (d == '0') // Si falla
-//                   {
-//                     oceanoDisparos[x-i-1][y-1] = 'X';
-//                     i--;
-//                   }
-//                   else // Si acierta
-//                   {
-//                     if (d == objetivo.tipo) // Si es objetivo
-//                     {
-//                       objetivo.largo--;
-//                       i--;
-//                       if (objetivo.largo <= 0) return; // Si ya esta cazado
-                      
-//                       if (oceanoDisparos[x-i-1][y-1] == '0') // Comprobar si el disparo es posible
-//                       {
-//                         d = t.disparo(x-i, y);
-
-//                         if (d == '0') // Si falla
-//                         {
-//                           oceanoDisparos[x-i-1][y-1] = 'X';
-//                           i--;
-//                         }
-//                         else // Si acierta
-//                         {
-//                           if (d == objetivo.tipo) // Si es objetivo
-//                           {
-//                             objetivo.largo--;
-//                             i--;
-//                             if (objetivo.largo <= 0) return; // Si ya esta cazado
-//                           }
-//                           else if (d != '0') // Si no es objetivo
-//                           {
-//                             Tipo o = new Tipo(d);
-//                             o.largo--;
-//                             pilaObjetivo.add(o);
-//                           }
-//                         }
-//                       }
-//                     }
-//                     else if (d != '0')
-//                     {
-//                       Tipo o = new Tipo(d);
-//                       o.largo--;
-//                       pilaObjetivo.add(o);
-//                     }
-//                   }
-//                 }
-//               }
-//               else // Si acierta
-//               {
-//                 oceanoDisparos[x-i-1][y-1] = d;
-//                 if (d == objetivo.tipo) // Si es el objetivo
-//                 {
-//                   objetivo.largo--;
-//                   i++;
-//                   if (objetivo.largo <= 0) return; // Si ya esta cazado
-                  
-//                   if (oceanoDisparos[x-i-1][y-1] == '0') // Comprobar si el disparo es posible
-//                   {
-//                     d = t.disparo(x-i, y);
-//                     System.out.println("Disparo en:" + y + ":" + (x-i) + " " + d);
-//                     if (d == '0') // Si falla
-//                     {
-//                       oceanoDisparos[x-i-1][y-1] = 'X';
-//                       i--;
-//                       if (oceanoDisparos[x-i-1][y-1] == '0') // Comprobar si el disparo es posible
-//                       {
-//                         d = t.disparo(x-i, y);
-
-//                         if (d == '0') // Si falla
-//                         {
-//                           oceanoDisparos[x-i-1][y-1] = 'X';
-//                           i--;
-//                         }
-//                         else // Si acierta
-//                         {
-//                           if (d == objetivo.tipo) // Si es objetivo
-//                           {
-//                             objetivo.largo--;
-//                             i--;
-//                             if (objetivo.largo <= 0) return; // Si ya esta cazado
-                            
-//                             if (oceanoDisparos[x-i-1][y-1] == '0') // Comprobar si el disparo es posible
-//                             {
-//                               d = t.disparo(x-i, y);
-
-//                               if (d == '0') // Si falla
-//                               {
-//                                 oceanoDisparos[x-i-1][y-1] = 'X';
-//                                 i--;
-//                               }
-//                               else // Si acierta
-//                               {
-//                                 if (d == objetivo.tipo) // Si es objetivo
-//                                 {
-//                                   objetivo.largo--;
-//                                   i--;
-//                                   if (objetivo.largo <= 0) return; // Si ya esta cazado
-//                                 }
-//                                 else if (d != '0') // Si no es objetivo
-//                                 {
-//                                   Tipo o = new Tipo(d);
-//                                   o.largo--;
-//                                   pilaObjetivo.add(o);
-//                                 }
-//                               }
-//                             }
-//                           }
-//                           else if (d != '0')
-//                           {
-//                             Tipo o = new Tipo(d);
-//                             o.largo--;
-//                             pilaObjetivo.add(o);
-//                           }
-//                         }
-//                       }
-//                     }
-//                     else
-//                     {
-//                       oceanoDisparos[x-i-1][y-1] = d;
-//                       if (d == objetivo.tipo) // Si es el objetivo
-//                       {
-//                         objetivo.largo--;
-//                         i++;
-//                         if (objetivo.largo <= 0) return;
-                        
-//                         if (oceanoDisparos[x-i-1][y-1] == '0')
-//                         {
-//                           d = t.disparo(x-i, y);
-
-//                           System.out.println("Disparo en:" + y + ":" + (x-i) + " " + d);
-//                           if (d == '0') 
-//                           {
-//                             oceanoDisparos[x-i-1][y-1] = 'X';
-//                             // i = 
-//                           }
-//                           else
-//                           {
-//                             oceanoDisparos[x-i-1][y-1] = d;
-//                             if (d == objetivo.tipo) // Si es el objetivo
-//                             {
-//                               objetivo.largo--;
-//                               i++;
-//                               if (objetivo.largo <= 0) return;
-                              
-//                             }
-//                             else if (d != '0')
-//                             {
-//                               Tipo o = new Tipo(d);
-//                               o.largo--;
-//                               pilaObjetivo.add(o);
-//                             }
-//                           }
-//                         }
-//                       }
-//                       else if (d != '0')
-//                       {
-//                         Tipo o = new Tipo(d);
-//                         pilaObjetivo.add(o);
-//                       }
-//                     }
-//                   }
-//                 }
-//                 else if (d != '0')
-//                 {
-//                   Tipo o = new Tipo(d);
-//                   pilaObjetivo.add(o);
-//                 }
-//               }
-//             }
-//           }
-//           else if (d != '0')
-//           {
-//             Tipo o = new Tipo(d);
-//             pilaObjetivo.add(o);
-//           }
-//         }
-//       }          
-//     }          
-//   }
-// }
